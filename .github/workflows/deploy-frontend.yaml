@@ -1,9 +1,9 @@
-name: Deploy to Azure Blob Storage
+name: Azure Storage Static Website Deployment
 
 on:
   push:
     branches:
-      - main
+      - main  # You can adjust the branch as needed
 
 jobs:
   deploy:
@@ -13,19 +13,20 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Azure CLI
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Build and prepare your webpages
+    - name: Install azcopy
       run: |
-        # Your build and webpage preparation steps here
+        curl -Lo azcopy_linux_amd64_10.10.0.tar.gz https://aka.ms/downloadazcopy-v10-linux
+        tar -xf azcopy_linux_amd64_10.10.0.tar.gz
+        sudo cp ./azcopy_linux_amd64_10.10.0/azcopy /usr/bin/
+        azcopy --version
+      shell: bash
 
-    - name: Deploy to Azure Blob Storage
+    - name: Upload files to Azure Storage
       run: |
-        az storage blob upload-batch --destination $WEB_ROOT_CONTAINER_NAME --source ./frontend --sas $AZURE_BLOB_SAS_URL --pattern '*'
+        export AZCOPY_SOURCE="./frontend"
+        export AZCOPY_DEST="https://cneleesbarelinkwebsite.blob.core.windows.net/\$web/"
+        
+        azcopy copy "$AZCOPY_SOURCE" "$AZCOPY_DEST?$AZCOPY_SAS_TOKEN" --recursive=true
+      env:
+        AZCOPY_SAS_TOKEN: ${{ secrets.AZURE_STORAGE_SAS_TOKEN }}
 
-env:
-  WEB_ROOT_CONTAINER_NAME: $web
-  AZURE_BLOB_SAS_URL: ${{ secrets.AZURE_BLOB_SAS_URL }}
