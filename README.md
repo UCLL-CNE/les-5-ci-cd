@@ -1,6 +1,6 @@
 # leesbare link
 
-![Website logo](logo.png)
+![Website logo](frontend/images/logo.png)
 
 Starters project for the UCLL course *Cloud Native Engineering*
 *leesbare link* is a website that allows you to create link mappings, just like bit.ly or other URL shorters. 
@@ -11,6 +11,11 @@ However, the purpose is not to shorten links, but to make them readable.
 The application does not use docker anymore. The backend and database functionality all run in the cloud via Azure Functions and Cosmos DB. All that's needed now is to run the frontend.
 
 In the `.vscode` folder there is a configuration for the *live server* extension to start up the frontend.
+
+## CI/CD
+
+Workflows have been added to automatically deploy the `Azure Functions` and `Azure Blob Storage static site` on push.
+You can take a look at them in the `.github` folder.
 
 ## Architecture
 

@@ -1,32 +1,23 @@
-name: Azure Storage Static Website Deployment
+name: Azure Blob Storage Upload
 
 on:
   push:
     branches:
-      - main  # You can adjust the branch as needed
+      - main
 
 jobs:
-  deploy:
+  upload:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Install azcopy
+    - name: Run Upload Script
       run: |
-        curl -Lo azcopy_linux_amd64_10.10.0.tar.gz https://aka.ms/downloadazcopy-v10-linux
-        tar -xf azcopy_linux_amd64_10.10.0.tar.gz
-        sudo cp ./azcopy_linux_amd64_10.10.0/azcopy /usr/bin/
-        azcopy --version
-      shell: bash
-
-    - name: Upload files to Azure Storage
-      run: |
-        export AZCOPY_SOURCE="./frontend"
-        export AZCOPY_DEST="https://cneleesbarelinkwebsite.blob.core.windows.net/\$web/"
-        
-        azcopy copy "$AZCOPY_SOURCE" "$AZCOPY_DEST?$AZCOPY_SAS_TOKEN" --recursive=true
+        chmod +x ./upload-site.sh
+        ./upload-site.sh
       env:
-        AZCOPY_SAS_TOKEN: ${{ secrets.AZURE_STORAGE_SAS_TOKEN }}
-
+        storage_account: ${{ secrets.STORAGE_ACCOUNT }}
+        container_name: ${{ secrets.CONTAINER_NAME }}
+        sas_token: ${{ secrets.SAS_TOKEN }}
