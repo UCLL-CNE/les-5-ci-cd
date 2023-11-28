@@ -8,17 +8,15 @@ However, the purpose is not to shorten links, but to make them readable.
 
 ## How to run
 
-The application does not use docker anymore. The backend and database functionality all run in the cloud via Azure Functions and Cosmos DB. All that's needed now is to run the frontend.
+The application does not use docker anymore. The backend, database and static site functionality all run in the cloud via:
 
-In the `.vscode` folder there is a configuration for the *live server* extension to start up the frontend.
+ - Azure Functions
+ - Cosmos DB
+ - Azure Blob Storage static site hosting
+
+In the `.vscode` folder there is a configuration for the *live server* extension to start up the frontend if you want to run the frontend locally.
 
 ## CI/CD
 
 Workflows have been added to automatically deploy the `Azure Functions` and `Azure Blob Storage static site` on push.
 You can take a look at them in the `.github` folder.
-
-## Architecture
-
-This version of the application mirated the backend functionality to Azure Functions, that run in an Azure Function App. You can do the same by following this tutorial: https://learn.microsoft.com/en-us/azure/azure-functions/functions-develop-vs-code?tabs=node-v3%2Cpython-v2%2Cisolated-process&pivots=programming-language-javascript
-
-I decided to use the `v3` model in Typescript instead of the `v4` model because it was giving me unstable results when deploying.
